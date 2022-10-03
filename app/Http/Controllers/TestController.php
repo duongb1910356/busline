@@ -13,16 +13,22 @@ use App\Models\GiaVe;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Sunra\PhpSimple\HtmlDomParser;
 
+use Symfony\Component\DomCrawler\Crawler;
 use PDO;
 
 class TestController extends Controller
 {
     public function test()
     {
-        $partern = '/^[0]/';
-        $subject =  '0832645549';
-        $replacement = '+84';
-        echo preg_replace('/^[0]/', '+84', $subject);
+        $html = file_get_contents("img/icon/nhaxe.html");
+        $crawler = new Crawler($html);
+        $crawler = $crawler->filter('a[data-medium="Item-1"]');
+        // var_dump($crawler);
+
+        foreach ($crawler as $domElement) {
+            var_dump($domElement->nodeValue);
+        }
     }
 }

@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\LoginController;
+use App\Models\HoaDon;
+use App\Models\ChiTietHoaDon;
+
 use App\Models\Tuyen;
 use App\Models\LichTrinh;
 use App\Models\LoaiXe;
@@ -48,7 +51,7 @@ class VeController extends Controller
 									<span style="font-size: 17px;">' . $lichtrinh->tuyens->name_tuyen . '</span><br>
 									<span style="font-size: 17px;" class="fw-bold text-danger text-center">' . $lichtrinh->getbenxedi()->name_benxe . "-" . $lichtrinh->getbenxeden()->name_benxe . '</span>
 									<br>
-									<span style="font-size: 17px;" name="soghetrong" >Số ghế trống: &nbsp' . $this->getSoGheTrong($lichtrinh->id_lichtrinh). '</span><br>
+									<span style="font-size: 17px;" name="soghetrong" >Số ghế trống: &nbsp' . $this->getSoGheTrong($lichtrinh->id_lichtrinh) . '</span><br>
 								</div>
 							</div>';
 			}
@@ -60,7 +63,7 @@ class VeController extends Controller
 
 	public function getSoGheTrong($idlichtrinh)
 	{
-		$lichtrinh = LichTrinh::where("id_lichtrinh",$idlichtrinh)->first();
+		$lichtrinh = LichTrinh::where("id_lichtrinh", $idlichtrinh)->first();
 		return $lichtrinh->xes->loaixes->soghe - Ve::where('id_lichtrinh', $lichtrinh->id_lichtrinh)->count();
 	}
 
@@ -106,10 +109,51 @@ class VeController extends Controller
 		// return "abc";
 	}
 
+	public function thanhToanTienMat($cost, $listidve)
+	{
+		require_once("../bootstrap/configvnpay.php");
+		$hoadon = HoaDon::create([
+			"id_hoadon" => $expire,
+			"giatri" => $cost,
+			"ngaythanhtoan" => date('Y-m-d')
+		]);
+
+		foreach ($listidve as $key => $value) {
+			$ve = Ve::where("id_ve", $value)->first();
+			$ve->save();
+			$chitiethoadon = ChiTietHoaDon::create([
+				"id_hoadon" => $expire,
+				"id_ve" => $value
+			]);
+		}
+	}
+
+	public function thanhToanVeDon($idve)
+	{
+		require_once("../bootstrap/configvnpay.php");
+		$ve = Ve::where("id_ve", $idve)->first();
+		$ve->tinhtrang = 1;
+		$cost = $ve->getGiaVe();
+
+		$hoadon = HoaDon::create([
+			"id_hoadon" => $expire,
+			"giatri" => $cost,
+			"ngaythanhtoan" => date('Y-m-d')
+		]);
+		
+		$chitiethoadon = ChiTietHoaDon::create([
+			"id_hoadon" => $expire,
+			"id_ve" => $idve
+		]);
+		return $ve->save();
+	}
+
 	public function datVeXe(Request $request)
 	{
 		$check = false;
 		$newve = null;
+		$countpay = 0;
+		$listidve = array();
 		foreach ($request->vitri as $key => $value) {
 			$newve = new Ve;
 			$newve->id_nhanvien = $request->nhanvien;
@@ -120,17 +164,21 @@ class VeController extends Controller
 			$newve->tinhtrang = $request->tinhtrang;
 			$newve->vitri = $value;
 			$newve->trungchuyen = $request->trungchuyen;
-			DB::transaction(function () use ($newve, &$check) {
+
+			DB::transaction(function () use ($newve, &$check, &$countpay, &$listidve) {
 				try {
 					if (!Ve::where('id_lichtrinh', $newve->id_lichtrinh)->where('vitri', $newve->vitri)->exists()) {
 						$newve->save();
 						$check = true;
+						$countpay += $newve->getGiaVe();
+						array_push($listidve, $newve->id_ve);
 					}
 				} catch (\Illuminate\Database\QueryException $e) {
 					echo $e;
 				}
 			});
 		}
+		$this->thanhToanTienMat($countpay, $listidve);
 
 		return json_encode([
 			"check" => $check,
@@ -174,28 +222,30 @@ class VeController extends Controller
 		$datatuyen = [];
 
 		foreach ($tuyens as $tuyen) {
-			array_push($data,[
+			array_push($data, [
 				"tuyen" => $tuyen,
-				"lichtrinh" => LichTrinh::where('id_tuyen',$tuyen->id_tuyen)->where('ngaydi',$date)->get()->toArray()
+				"lichtrinh" => LichTrinh::where('id_tuyen', $tuyen->id_tuyen)->where('ngaydi', $date)->get()->toArray()
 			]);
 		}
-		
+
 		$json = json_encode($data, JSON_PRETTY_PRINT);
 		$json = json_decode($json);
-		return view('ve.quanlyve',[
+		return view('ve.quanlyve', [
 			"tuyens" => Tuyen::all(),
 			"tuyenlich" => $json
 		]);
 	}
 
+	
+
 	public function deleteVe($idve)
 	{
-		Ve::where('id_ve', $idve)->delete();
+		return Ve::where('id_ve', $idve)->delete();
 	}
 
 	public function findListVe(Request $request)
 	{
-		$lichtrinh = LichTrinh::where('id_lichtrinh',$request->idlichtrinh)->first();
+		$lichtrinh = LichTrinh::where('id_lichtrinh', $request->idlichtrinh)->first();
 		return response()->json([
 			[
 				"lichtrinh" => $lichtrinh,
@@ -230,17 +280,40 @@ class VeController extends Controller
 
 	public function suaVe(Request $request)
 	{
-		$ve = Ve::where('id_ve',$request->idve)->first();
+		$ve = Ve::where('id_ve', $request->idve)->first();
 		$ve->name_khach = $request->tenkhach;
 		$ve->sodienthoai = $request->sodienthoai;
 		$ve->trungchuyen = $request->trungchuyen;
 
-		if($request->idlichtrinh != -1 && $request->vitri != null){
+		if ($request->idlichtrinh != -1 && $request->vitri != null) {
 			$ve->id_lichtrinh = $request->idlichtrinh;
 			$ve->vitri = $request->vitri;
 		}
 		return $ve->save();
-		
 	}
 
+	public function timVe()
+	{
+		$sodienthoai = $_GET['sodienthoai'];
+		if ($sodienthoai == null) {
+			return -1;
+		}
+
+		$listve = Ve::where("sodienthoai", "LIKE", '%' . $sodienthoai . '%')->get();
+
+		return $listve;
+	}
+
+	public function fillFormModal($idve)
+	{
+		$ve = Ve::where("id_ve", $idve)->first();
+		$lichtrinh = $ve->lichtrinhs;
+		$tuyen = $lichtrinh->tuyens;
+
+		return [
+			"ve" => $ve,
+			"lichtrinh" => $lichtrinh,
+			"tuyen" => $tuyen
+		];
+	}
 }

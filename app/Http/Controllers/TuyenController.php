@@ -59,4 +59,46 @@ class TuyenController extends Controller
     {
         return json_encode(Tuyen::where("id_tuyen",$idtuyen)->first()->benxes);
     }
+
+    public function capNhatTuyen()
+    {
+        parse_str($_GET["dataform"], $searcharray);
+        
+        if($_GET["idtuyen"] != -1){
+            $tuyen = Tuyen::where("id_tuyen",$_GET["idtuyen"])->first();
+        }else{
+            $tuyen = new Tuyen;
+        }
+        
+        $tuyen->name_tuyen = $searcharray["inputtentuyen"];
+        $tuyen->id_tinhdi = $searcharray["modalbendi"];
+        $tuyen->id_tinhden = $searcharray["modalbenden"];
+        $tuyen->khoangcach = $searcharray["inputkhoangcach"];
+        $tuyen->thoigian = $searcharray["inputthoigian"];
+        $tuyen->save();
+
+        $tuyen->benxes()->detach();
+
+        foreach ($searcharray["chonbenxe"] as $key => $value) {
+            if($value != ""){
+                $tuyen->benxes()->attach($value);
+            }
+        }
+        return $tuyen->save();
+
+        // return $searcharray;
+    }
+
+    public function getThongTinTuyen($idtuyen)
+    {
+        $tuyen = Tuyen::where("id_tuyen",$idtuyen)->first();
+        return $tuyen;
+        // $data = array();
+        // $data = [
+        //     "tentuyen" => $tuyen->name_tuyen,
+        //     "tinhdi" => $tuyen->id_tinhdi,
+        //     "tinhden" => $tuyen->id_tinhden,
+        //     "khoangcach" => 
+        // ];
+    }
 }

@@ -9,6 +9,8 @@ $(document).ready(function () {
     var today = now.getFullYear() + "-" + (month) + "-" + (day);
     // $('#modalngaydi').val(today);
     $('#ngaydi').val(today);
+    var multi = $('#chonbenxe').filterMultiSelect();
+
 
     $(".example").each(function () {
         $(this).fancyTable({
@@ -32,7 +34,7 @@ $(document).ready(function () {
                     alert("Tuyến đã được xóa thành công");
                     currentrow.parent().parent().remove();
                     $('#modalxoatuyen').modal("hide");
-                }else{
+                } else {
                     alert("Tuyến chưa được xóa")
                 }
             },
@@ -44,25 +46,33 @@ $(document).ready(function () {
         });
     });
 
-    $('button[name="btnsualichtrinh"]').click(function(){
+    $('button[name="btnsuatuyen"]').click(function () {
         currentrow = $(this);
-        // $.ajax({
-        //     type: "GET",
-        //     url: "/tuyen/sua/" + currentrow.attr("data-idtuyen"),
-        //     success: function (data) {
-                
-        //     },
-        //     error: function (data) {
-        //         alert("Lỗi hệ thống!");
-        //         var errors = data.responseJSON;
-        //         console.log(errors);
-        //     }
-        // });
-        $('#selecttinhden').val(currentrow.parent().attr("data-idtinhden"));
-        $('selecttinhdi').val(currentrow.parent().attr("data-idtinhdi"));
-        $('#inputtentuyen').val(currentrow.parent().attr("data-nametuyen"));
-        $('#inputkhoangcach').val(currentrow.parent().attr("data-khoangcach"));
-        $('#inputthoigian').val(currentrow.parent().attr("data-thoigian"));
+        $('#modalchuyenlichLabel').text("Sửa tuyến");
+        $('#submitcapnhattuyen').text("Cập nhật");
+        $.ajax({
+            type: "GET",
+            url: "/tuyen/thongtin/" + currentrow.parent().attr("data-idtuyen"),
+            success: function (data) {
+                console.log(data);
+                $('#selecttinhden').val(data.id_tinhden);
+                $('#selecttinhdi').val(data.id_tinhdi);
+                $('#inputtentuyen').val(data.name_tuyen);
+                $('#inputkhoangcach').val(data.khoangcach);
+                $('#inputthoigian').val(data.thoigian);
+                // alert(data);
+            },
+            error: function (data) {
+                alert("Lỗi hệ thống!");
+                var errors = data.responseJSON;
+                console.log(errors);
+            }
+        });
+        // $('#selecttinhden').val(currentrow.parent().attr("data-idtinhden"));
+        // $('#selecttinhdi').val(currentrow.parent().attr("data-idtinhdi"));
+        // $('#inputtentuyen').val(currentrow.parent().attr("data-nametuyen"));
+        // $('#inputkhoangcach').val(currentrow.parent().attr("data-khoangcach"));
+        // $('#inputthoigian').val(currentrow.parent().attr("data-thoigian"));
 
         $.ajax({
             type: "GET",
@@ -70,8 +80,10 @@ $(document).ready(function () {
             success: function (data) {
                 console.log(data);
                 data = JSON.parse(data);
-                alert("yes");
-                $('#chonbenxe > option').attr("selected", "selected")
+                multi.deselectAll();
+                data.forEach(element => {
+                    multi.selectOption(element.id_benxe);
+                });
             },
             error: function (data) {
                 alert("Lỗi hệ thống!");
@@ -80,7 +92,60 @@ $(document).ready(function () {
             }
         });
 
-        $('#modalthemlichtrinh').modal("show");
+        $('#modalcapnhattuyen').modal("show");
     });
+
+    $('#submitcapnhattuyen').click(function () {
+        var myform = $('#formsuatuyen').serialize();
+        // alert(paramidtuyen);
+        // if(paramidtuyen == null){
+        //     paramidtuyen = currentrow.parent().attr("data-idtuyen");
+        // }
+
+        if (currentrow != null ) {
+            $idtuyen = currentrow.parent().attr("data-idtuyen");
+        }else{
+            $idtuyen = -1;
+        }
+        $.ajax({
+            type: "GET",
+            url: "/tuyen/capnhat",
+            data: {
+                "idtuyen": $idtuyen,
+                // "tentuyen" : $('#inputtentuyen'),
+                // "tinhdi" : $('#selecttinhdi'),
+                // "tinhden" : $('#selecttinhden'),
+                // "khoangcach" : $('#inputkhoangcach'),
+                // "thoigian" : $('#inputthoigian')
+                "dataform": myform
+            },
+            // dataType: "dataType",
+            success: function (data) {
+                // alert("okkk");
+                console.log(data);
+                if (data == true) {
+                    alert("Tuyến đã được cập nhật thành công");
+                    $('#modalcapnhattuyen').modal("hide");
+                    window.location = "http://busline.localhost/tuyen/quanly";
+                } else {
+                    alert("Cập nhật thất bại");
+                }
+            },
+            error: function (data) {
+                alert("Lỗi hệ thống!");
+                var errors = data.responseJSON;
+                console.log(errors);
+            }
+        });
+    })
+
+    $('button[name="btnthemmoituyen"]').click(function(){
+        multi.deselectAll();
+        currentrow = null;
+        $('#formsuatuyen').trigger("reset");
+        $('#modalchuyenlichLabel').text("Thêm tuyến mới");
+        $('#submitcapnhattuyen').text("Thêm");
+        $('#modalcapnhattuyen').modal("show");
+    })
 
 });

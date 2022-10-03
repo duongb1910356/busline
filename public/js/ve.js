@@ -27,6 +27,57 @@ $(document).ready(function () {
         return $position.length * $giave;
     }
 
+    $('button[name="submitthanhtoan"]').click(function (e) {
+        e.preventDefault();
+        $tenkhach = $('#tenkhach').val();
+        $sodienthoai = $('#sodienthoai').val();
+        $id_giave = $('#exampleModal').attr("data-idgiave");
+        $id_nhanvien = $('#id-nhanvien').attr("data-id-nhanvien");
+        $trungchuyen = $('#trungchuyen').val();
+        $tinhtrang = 1;
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+            }
+        });
+        $.ajax({
+            type: "GET",
+            url: "/ve/banve/datve",
+            data: {
+                lichtrinh: $idlichtrinh,
+                nhanvien: $id_nhanvien,
+                tenkhach: $tenkhach,
+                sodienthoai: $sodienthoai,
+                giave: $id_giave,
+                vitri: position,
+                tinhtrang: $tinhtrang,
+                trungchuyen: $trungchuyen
+            },
+            success: function (data) {
+                console.log(data)
+                data = jQuery.parseJSON(data);
+                if (data.check == true) {
+                    alert("Vé đã được thanh toán thành công");
+                    currentchoice.find('span[name="soghetrong"]').text('Số ghế trống: ' + data.sochotrong);
+                }
+                else if (data.check == false)
+                    alert("Vị trí đã được chọn trước đó");
+
+                // currentchoice.find('#soghetrong').text(data.sochotrong);
+                // alert(data.check)
+                $('#exampleModal').modal('hide');
+
+            },
+            error: function (data) {
+                alert("Lỗi hệ thống!");
+                var errors = data.responseJSON;
+                console.log(errors);
+            }
+
+        });
+
+    });
+
     $('button[name="submitdatve"]').click(function (e) {
         e.preventDefault
         $tenkhach = $('#tenkhach').val();

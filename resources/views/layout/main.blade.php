@@ -22,7 +22,8 @@
     <nav class="navbar navbar-expand-md navbar-dark px-3" style="background-color: rgba(25, 17, 106, 0.68);"
         aria-label="Fourth navbar example">
         <div class="container-fluid">
-            <a class="navbar-brand" href="/ve/banve"><img src="{{ asset('img/icon/Directions bus.svg') }}" alt="">BUSLINE</a>
+            <a class="navbar-brand" href="/ve/banve"><img src="{{ asset('img/icon/Directions bus.svg') }}"
+                    alt="">BUSLINE</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample04"
                 aria-controls="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -30,45 +31,115 @@
             <div class="collapse navbar-collapse" id="navbarsExample04">
                 <ul class="navbar-nav me-auto mb-2 mb-md-0">
                     <li class="nav-item dropdown px-3">
-                        <a class="nav-link dropdown-toggle text-white" href="#" id="dropdown04" data-bs-toggle="dropdown"
-                            aria-expanded="false">Vé</a>
+                        <a class="nav-link dropdown-toggle text-white" href="#" id="dropdown04"
+                            data-bs-toggle="dropdown" aria-expanded="false">Vé</a>
                         <ul class="dropdown-menu" aria-labelledby="dropdown04">
                             <li><a class="dropdown-item" href="/ve/quanlyve">Quản lý danh sách vé</a></li>
                             <li><a class="dropdown-item" href="/ve/banve">Bán vé</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown px-3">
-                        <a class="nav-link dropdown-toggle text-white" href="#" id="dropdown04" data-bs-toggle="dropdown"
-                            aria-expanded="false">Lịch trình</a>
+                        <a class="nav-link dropdown-toggle text-white" href="#" id="dropdown04"
+                            data-bs-toggle="dropdown" aria-expanded="false">Lịch trình</a>
                         <ul class="dropdown-menu" aria-labelledby="dropdown04">
                             <li><a class="dropdown-item" href="/lichtrinh/quanly">Xem danh sách lịch trình</a></li>
                             <li><a class="dropdown-item" href="lichtrinh/themlichtrinh">Thêm mới lịch trình</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown px-3">
-                        <a class="nav-link dropdown-toggle text-white" href="#" id="dropdown04" data-bs-toggle="dropdown"
-                            aria-expanded="false">Tuyến</a>
+                        <a class="nav-link dropdown-toggle text-white" href="#" id="dropdown04"
+                            data-bs-toggle="dropdown" aria-expanded="false">Tuyến</a>
                         <ul class="dropdown-menu" aria-labelledby="dropdown04">
-                            <li><a class="dropdown-item" href="/tuyen/quanly">Xem danh sách tuyen</a></li>
+                            <li><a class="dropdown-item" href="/tuyen/quanly">Xem danh sách tuyến</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown px-3">
-                        <a class="nav-link dropdown-toggle text-white" href="#" id="id-nhanvien" data-id-nhanvien="@yield('id-nhanvien')" data-bs-toggle="dropdown"
-                            aria-expanded="false">@yield('user')</a>
+                        <a class="nav-link dropdown-toggle text-white" href="#" id="id-nhanvien"
+                            data-id-nhanvien="@yield('id-nhanvien')" data-bs-toggle="dropdown"
+                            aria-expanded="false">Nhân viên</a>
                         <ul class="dropdown-menu" aria-labelledby="dropdown04">
-                            <li><a class="dropdown-item" href="/user">Xem thông tin nhân viên</a></li>
                             <li><a class="dropdown-item" href="/logout">Đăng xuất</a></li>
                         </ul>
                     </li>
                 </ul>
                 <form>
-                    <input class="form-control" type="text" placeholder="Nhập số điện thoại" aria-label="">
+                    <input class="form-control" id="search-box" type="text" placeholder="Nhập số điện thoại"
+                        aria-label="">
+                    {{-- <input type="text" class="mySearch" id="ls_query" placeholder="Type to start searching ..."> --}}
+                    <div class="card-list">
+                        <table class="table table-striped">
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
                 </form>
             </div>
         </div>
     </nav>
 
     <main>
+        <div class="modal fade" data-idve="" id="modalchuyenlich" data-backdrop="static" data-keyboard="false"
+            tabindex="-1" aria-labelledby="staticBackdrop" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalchuyenlichLabel">Cập nhật vé</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form class="row" id="formsuave">
+                            <div class="col-md-6">
+                                <label class="form-label">Họ tên khách</label>
+                                <input type="text" id="modalsuave-tenkhach" class="form-control">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Số điện thoại</label>
+                                <input type="text" id="modalsuave-sodienthoai" class="form-control">
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label">Trung chuyển</label>
+                                <input type="text" id="modalsuave-trungchuyen" class="form-control">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Tuyến</label>
+                                <select name="modalsuave-suatuyen" id="modalsuave-suatuyen" class="form-select">
+                                    @foreach ($tuyens as $tuyen)
+                                        <option value="{{ $tuyen->id_tuyen }}">{{ $tuyen->name_tuyen }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Ngày</label>
+                                <input type="date" name="modalsuave-suangay" id="modalsuave-suangay" class="form-control">
+                            </div>
+                            <div class="col-md-12">
+                                <br>
+                                <button name="btntimlichtrinh" class="btn btn-primary form-control">Tìm</button>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="form-label">Lịch xe chạy</label>
+                                <select name="modalsuave-lichxechay" id="modalsuave-lichxechay" class="form-select">
+                                    {{-- <option value="-1">None</option> --}}
+                                </select>
+                            </div>
+                            <div class="col-md-12" style="margin-top: 10px" id="modalsuave-seat">
+
+                            </div>
+                        </form>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                        <button id="submitxuatve" type="button" class="btn btn-primary">Thanh toán</button>
+                        <button id="submitxoa" type="button" class="btn btn-danger">Xóa</button>
+                        <button id="submitcapnhat" type="button" class="btn btn-warning">Cập nhật</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
         <div class="container-fluid">
             <div class="row">
                 @section('toolbar')
@@ -80,7 +151,7 @@
             @section('maincontent')
 
             @show
-            
+
 
         </div>
     </main>
@@ -182,8 +253,11 @@
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
     </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="{{ asset('js/nav-common.js') }}"></script>
 
     @yield('myscript')
+
+
 
 </body>
 

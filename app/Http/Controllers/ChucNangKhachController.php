@@ -11,6 +11,7 @@ use App\Models\Tuyen;
 use App\Models\LichTrinh;
 use App\Models\LoaiXe;
 use App\Models\Ve;
+use App\Models\Tinh;
 
 use Response;
 use Illuminate\Support\Facades\DB;
@@ -25,6 +26,50 @@ class ChucNangKhachController extends Controller
         $idve = $_GET['inputmave'];
         return Ve::where("id_ve", $idve)->exists();
     }
+
+    public function showKhachDatVe()
+	{
+		return view('trangchu.datve', [
+			"tinhs" => Tinh::all()
+		]);
+	}
+
+    public function timLichTrinh(){
+		$tuyen = Tuyen::where("id_tinhdi", $_GET["tinhdi"])->where("id_tinhden", $_GET["tinhden"])->first();
+
+		if ($tuyen != null) {
+			$lichtrinhs = LichTrinh::where("id_tuyen", $tuyen->id_tuyen)->where("ngaydi", $_GET["ngaydi"])->get();
+			if ($lichtrinhs != null) {
+				$datalichtrinh = [];
+				$ghetrong = 0;
+				foreach ($lichtrinhs as $lichtrinh) {
+					$ghetrong = $lichtrinh->xes->loaixes->soghe - Ve::where('id_lichtrinh', $lichtrinh->id_lichtrinh)->count();
+					array_push($datalichtrinh, [
+						"lichtrinh" => $lichtrinh,
+						"xe" => $lichtrinh->xes,
+						"loaixe" => $lichtrinh->xes->loaixes,
+						"tuyen" => $tuyen,
+						"benxedi" => $lichtrinh->getbenxedi(),
+						"benxeden" => $lichtrinh->getbenxeden(),
+						"ghetrong" => $ghetrong,
+						"vitri" => Ve::select("vitri")->where("id_lichtrinh", $lichtrinh->id_lichtrinh)->get(),
+						"giave" => $lichtrinh->giaves()
+					]);
+				};
+			}
+		}
+		return $datalichtrinh;
+	}
+
+    public function getListCho(Request $request)
+	{
+		$vitris = Ve::select("vitri")->where("id_lichtrinh",$request->idlichtrinh)->get();
+		$datavitri = [];
+		foreach($vitris as $vitri){
+			array_push($datavitri,$vitri);
+		}
+		return $datavitri;
+	}
 
     public function showKetQuaTraCuuVe($idve)
     {

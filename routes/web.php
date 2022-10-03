@@ -25,8 +25,8 @@ Route::get('/logout', 'App\Http\Controllers\LoginController@logout');
 Route::get('/', 'App\Http\Controllers\TinTucController@showTrangchu')->name('home');
 
 Route::get('/tintuc/{id}', 'App\Http\Controllers\TinTucController@showTinTucChiTiet');
-Route::get('/datve', 'App\Http\Controllers\TinTucController@showKhachDatVe');
-Route::get('/datve/timlich', 'App\Http\Controllers\TinTucController@timLichTrinh');
+Route::get('/datve', 'App\Http\Controllers\ChucNangKhachController@showKhachDatVe');
+Route::get('/datve/timlich', 'App\Http\Controllers\ChucNangKhachController@timLichTrinh');
 Route::get('/laysochotrong', 'App\Http\Controllers\VeController@getSoGheTrong');
 
 
@@ -37,7 +37,7 @@ Route::get('/ketquatracuuve/{idve}', 'App\Http\Controllers\ChucNangKhachControll
 
 
 Route::get('/datve/khach', 'App\Http\Controllers\PayMentController@datVeXe');
-Route::get('/datve/getlistcho', 'App\Http\Controllers\TinTucController@getListCho');
+Route::get('/datve/getlistcho', 'App\Http\Controllers\ChucNangKhachController@getListCho');
 Route::get('/tinnhan', 'App\Http\Controllers\PayMentController@sendSMS');
 
 Route::post('/huyve/{id}', 'App\Http\Controllers\ChucNangKhachController@huyVe');
@@ -67,6 +67,8 @@ Route::get('/ve/banve/datve', 'App\Http\Controllers\VeController@datVeXe');
 Route::get('/ve/inve/{id}', 'App\Http\Controllers\VeController@inVeXe');
 Route::get('/ve/quanlyve', 'App\Http\Controllers\VeController@showListVe');
 Route::get('/xoave/{id}', 'App\Http\Controllers\VeController@deleteVe');
+Route::get('/thanhtoanvedon/{idve}', 'App\Http\Controllers\VeController@thanhToanVeDon');
+
 
 Route::get('/lichtrinh/quanly', 'App\Http\Controllers\LichTrinhController@showLichTrinh');
 Route::get('/lichtrinh/xoa', 'App\Http\Controllers\LichTrinhController@xoaLichTrinh');
@@ -76,8 +78,16 @@ Route::get('/lichtrinh/benxetheotuyen', 'App\Http\Controllers\LichTrinhControlle
 Route::get('/tuyen/quanly', 'App\Http\Controllers\TuyenController@showDanhSachTuyen');
 
 Route::get('/tuyen/xoa/{idtuyen}', 'App\Http\Controllers\TuyenController@xoaTuyen');
+Route::get('/tuyen/capnhat', 'App\Http\Controllers\TuyenController@capNhatTuyen');
+Route::get('/tuyen/thongtin/{id}', 'App\Http\Controllers\TuyenController@getThongTinTuyen');
+
+
 Route::get('/tuyen/sua/{idtuyen}', 'App\Http\Controllers\TuyenController@suaTuyen');
 Route::get('/tuyenbenxe/{idtuyen}', 'App\Http\Controllers\TuyenController@getBenXeOfTuyen');
+
+Route::get('/timve', 'App\Http\Controllers\VeController@timVe');
+Route::get('/fill_form_modal/{idve}', 'App\Http\Controllers\VeController@fillFormModal');
+
 
 
 use App\Http\Controllers\PDFController;

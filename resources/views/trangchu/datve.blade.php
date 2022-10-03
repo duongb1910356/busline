@@ -152,7 +152,9 @@
                                                 <input class="form-check-input" type="radio" name="redirect"
                                                     id="inlineRadio2" value="option2">
                                                 <label class="form-check-label px-2" for="inlineRadio2"
-                                                    style="font-size: 15px">VNPay</label>
+                                                    style="font-size: 15px;">
+                                                    <img width="55px" style="padding-right: 1px" src="{{ asset('img/icon/logo-primary.55e9c8c.svg') }}" alt="">
+                                                </label>
                                             </div>
 
                                         </div>

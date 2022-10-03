@@ -1,6 +1,5 @@
 @extends('layout.main')
 
-@section('user', $_SESSION['username'])
 @section('id-nhanvien', $_SESSION['id_nhanvien'])
 
 
@@ -74,8 +73,22 @@
                                             Đã khởi hành
                                         @endif
                                     </td>
-                                    <td><button name="btnxemlistve" class="btn btn-info"
-                                            style="padding: .2rem .4rem; font-size: 15px;">Xem</button></td>
+                                    <style>
+                                        .tooltip-inner {
+                                            background-color: white;
+                                            box-shadow: 0px 0px 4px black;
+                                            opacity: 1 !important;
+                                            color: black;
+                                            font-size: 15px;
+                                        }
+                                    </style>
+                                    <td>
+                                        <button name="btnxemlistve" class="btn btn-outline-info"
+                                            data-bs-placement="top" title="Xem chi tiết danh sách vé"
+                                            style="padding: .2rem .4rem; font-size: 15px;">
+                                            <i class="bi bi-card-checklist"></i>
+                                        </button>
+                                    </td>
                                 </tr>
                             @endforeach
                         @endforeach
@@ -83,7 +96,6 @@
                 </table>
 
             </div>
-
             <div id="lichtrinhchitet" class="d-flex flex-column border p-0" style="border-radius: 15px">
                 <div style="background-color: blue; color: white; border-radius: 15px 15px 0px 0px"
                     class="text-center border">
@@ -176,7 +188,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                        <button id="submitxoa" type="button" class="btn btn-warning">Xóa</button>
+                        <button id="submitmodalxoa" type="button" class="btn btn-warning">Xóa</button>
                     </div>
                 </div>
             </div>
@@ -200,7 +212,7 @@
             </div>
         </div>
 
-        <div class="modal fade" data-idlichtrinh="" id="modalchuyenlich" data-backdrop="static" data-keyboard="false"
+        {{-- <div class="modal fade" data-idlichtrinh="" id="modalchuyenlich" data-backdrop="static" data-keyboard="false"
             tabindex="-1" aria-labelledby="staticBackdrop" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -242,7 +254,6 @@
                             <div class="col-md-12">
                                 <label class="form-label">Lịch xe chạy</label>
                                 <select name="lichxechay" id="lichxechay" class="form-select">
-                                    {{-- <option value="-1">None</option> --}}
                                 </select>
                             </div>
                             <div class="col-md-12" style="margin-top: 10px" id="seat">
@@ -258,18 +269,24 @@
 
                 </div>
             </div>
-        </div>
+        </div> --}}
 
     </div>
-    {{-- <div>{{$tuyenlich[0]->tuyen->name_tuyen}}</div> --}}
-
+    <style>
+        .custom-popover {
+            --bs-popover-max-width: 200px;
+            --bs-popover-border-color: var(--bs-primary);
+            --bs-popover-header-bg: var(--bs-primary);
+            --bs-popover-header-color: var(--bs-white);
+            --bs-popover-body-padding-x: 1rem;
+            --bs-popover-body-padding-y: .5rem;
+        }
+    </style>
+    
 @endsection
 
 @section('myscript')
     <script src="{{ asset('js/fancyTable.min.js') }}"></script>
     <script src="{{ asset('js/quanlyve.js') }}"></script>
-    {{-- <script>console.log({{$tuyenlich}});</script> --}}
-
-    <script></script>
-
+    
 @endsection

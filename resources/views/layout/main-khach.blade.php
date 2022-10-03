@@ -33,7 +33,7 @@
                     <li class="nav-item dropdown px-3">
                         <a class="nav-link dropdown-toggle text-white" href="#" id="id-nhanvien"
                             data-id-nhanvien="@yield('id-nhanvien')" data-bs-toggle="dropdown" aria-expanded="false">
-                            Người dùng
+                            Nhân viên
                         </a>
                         <ul class="dropdown-menu text-white" aria-labelledby="dropdown04">
                             <li><a class="dropdown-item" href="/login">Đăng nhập</a></li>

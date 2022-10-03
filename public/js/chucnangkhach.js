@@ -44,7 +44,6 @@ $(document).ready(function () {
             $('#tongtien').text("");
             $('#map-seat').empty();
             $('#map-seat').append(temp.loaixe.sodo);
-
             $.ajax({
                 type: "GET",
                 url: "/datve/getlistcho",

@@ -218,3 +218,20 @@ table>tbody>tr>td {
     text-indent: 2rem;
     text-align: justify;
 }
+
+.card-list {
+    position: absolute;
+    top: calc(100% +20px);
+    right: 30px;
+    background-color: white;
+    width: 400px;
+    border-radius: 2px;
+    box-shadow: 0 2px 10px rgb(0, 0, 0, 0.2);
+    z-index: 2;
+    display: none;
+}
+
+table.table-striped > tbody :hover{
+    cursor: pointer;
+    background-color: aqua;
+}

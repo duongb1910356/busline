@@ -1,6 +1,5 @@
 @extends('layout.main')
 
-@section('user', $_SESSION['username'])
 @section('id-nhanvien', $_SESSION['id_nhanvien'])
 
 

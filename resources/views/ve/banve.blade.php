@@ -1,6 +1,5 @@
 @extends('layout.main')
 
-@section('user', $_SESSION['username'])
 @section('id-nhanvien', $_SESSION['id_nhanvien'])
 
 
@@ -149,6 +148,7 @@
                 <div class="modal-footer" style="padding-bottom: 3px; padding-top: 3px">
                     <button type="button" class="btn btn-danger" style="font-size: 15px"
                         data-bs-dismiss="modal">Hủy</button>
+                    <button name="submitthanhtoan" class="btn btn-primary" style="font-size: 15px">Thanh toán</button>
                     <button name="submitdatve" class="btn btn-primary" style="font-size: 15px">Xác nhận</button>
                 </div>
 

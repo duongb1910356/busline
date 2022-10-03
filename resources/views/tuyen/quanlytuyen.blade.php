@@ -4,12 +4,11 @@
     <link rel="stylesheet" href="{{ asset('css/filter_multi_select.css') }}">
 @endsection
 
-@section('user', $_SESSION['username'])
 @section('id-nhanvien', $_SESSION['id_nhanvien'])
 
 @section('toolbar')
     <div class="col"></div>
-    <div class="col-md-9 my-3 p-0">
+    {{-- <div class="col-md-9 my-3 p-0">
         <div class="tool-ve d-flex flex-row align-items-center justify-content-center">
             <form action="/lichtrinh/quanly" method="GET">
                 <div class="d-inline-flex">
@@ -21,24 +20,19 @@
                         @endforeach
                     </select>
                 </div>
-                {{-- <div class="d-inline-flex">
-                    <label for="ngaydi" style="min-width: 120px;" class="px-3 my-auto">Ngày đi</label>
-                    <input type="date" id="ngaydi" name="ngaydi" value="" class="form-control taskbar-date">
-                </div> --}}
-
                 <div class="d-inline-flex px-3">
                     <button id="searchlistve" type="submit" class="btn btn-outline-info">Search</button>
                 </div>
             </form>
         </div>
-    </div>
+    </div> --}}
     <div class="col"></div>
 @endsection
 
 @section('maincontent')
     <div class="row mx-0 my-1 px-4">
         <div class="d-flex flex-column mb-2">
-            <button name="btnthemmoilichtrinh" class="btn btn-outline-info align-self-end">Thêm mới tuyến</button>
+            <button name="btnthemmoituyen" class="btn btn-outline-info align-self-end"><i class="bi bi-plus-circle"></i>&nbsp; Thêm mới tuyến</button>
 
         </div>
         <div class="container">
@@ -70,12 +64,15 @@
                                 <td>{{ $tuyen->getTinhDen()->name_tinh }}</td>
                                 <td>{{ $tuyen->khoangcach }}</td>
                                 <td>{{ $tuyen->thoigian }}</td>
-                                <td data-idtuyen="{{ $tuyen->id_tuyen }}" data-thoigian="{{$tuyen->thoigian}}" data-khoangcach="{{$tuyen->khoangcach}}" data-nametuyen="{{ $tuyen->name_tuyen }}" data-idtuyen="{{ $tuyen->id_tuyen }}" data-idtinhdi="{{ $tuyen->getTinhDi()->id_tinh }}"
+                                <td data-idtuyen="{{ $tuyen->id_tuyen }}" data-thoigian="{{ $tuyen->thoigian }}"
+                                    data-khoangcach="{{ $tuyen->khoangcach }}" data-nametuyen="{{ $tuyen->name_tuyen }}"
+                                    data-idtuyen="{{ $tuyen->id_tuyen }}"
+                                    data-idtinhdi="{{ $tuyen->getTinhDi()->id_tinh }}"
                                     data-idtinhden="{{ $tuyen->getTinhDen()->id_tinh }}">
-                                    <button name="btnsualichtrinh" class="btn btn-info"
-                                        style="padding: .2rem .4rem; font-size: 15px;">Sửa</button>
-                                    <button data-idtuyen="{{ $tuyen->id_tuyen }}" name="btnxoatuyen"
-                                        class="btn btn-warning" style="padding: .2rem .4rem; font-size: 15px;">Xóa</button>
+                                    <button name="btnsuatuyen" class="btn btn-info" data-bs-placement="top" title = "Sửa tuyến"
+                                        style="padding: .2rem .4rem; font-size: 15px;"><i class="bi bi-gear"></i></button>
+                                    <button data-idtuyen="{{ $tuyen->id_tuyen }}" name="btnxoatuyen" data-bs-placement="top" title = "Xóa tuyến" 
+                                        class="btn btn-warning" style="padding: .2rem .4rem; font-size: 15px;"><i class="bi bi-trash"></i></button>
                                 </td>
                             </tr>
                         @endforeach
@@ -103,7 +100,7 @@
                 </div>
 
 
-                <div class="modal fade" data-idlichtrinh="" id="modalthemlichtrinh" data-backdrop="static"
+                <div class="modal fade" data-idlichtrinh="" id="modalcapnhattuyen" data-backdrop="static"
                     data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdrop" aria-hidden="true">
                     <div class="modal-dialog modal-xl">
                         <div class="modal-content">
@@ -113,7 +110,7 @@
                                     aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <form class="row" id="formsuave">
+                                <form class="row" id="formsuatuyen">
                                     <div class="col-md-12">
                                         <label class="form-label">Tên tuyến</label>
                                         <input type="text" id="inputtentuyen" name="inputtentuyen" class="form-control">
@@ -137,12 +134,14 @@
 
                                     <div class="col-md-6">
                                         <label class="form-label">Khoảng cách</label>
-                                        <input type="text" name="inputkhoangcach" id="inputkhoangcach" class="form-control">
+                                        <input type="text" name="inputkhoangcach" id="inputkhoangcach"
+                                            class="form-control">
                                     </div>
 
                                     <div class="col-md-6">
                                         <label class="form-label">Thời gian</label>
-                                        <input type="text" name="inputthoigian" id="inputthoigian" class="form-control">
+                                        <input type="text" name="inputthoigian" id="inputthoigian"
+                                            class="form-control">
                                     </div>
 
                                     {{-- <div class="col-md-12">
@@ -152,8 +151,7 @@
 
                                     <div class="col-md-12">
                                         <label class="form-label">Bến xe</label>
-                                        <select multiple="multiple" name="chonbenxe[]" id="chonbenxe"
-                                            class="filter-multi-select">
+                                        <select multiple="multiple" name="chonbenxe[]" id="chonbenxe">
                                             @foreach ($benxes as $benxe)
                                                 <option value="{{ $benxe->id_benxe }}">{{ $benxe->name_benxe }}</option>
                                             @endforeach
@@ -164,8 +162,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                                <button id="submitthemlichtrinh" type="button" class="btn btn-warning">Thêm
-                                    lịch</button>
+                                <button id="submitcapnhattuyen" type="button" class="btn btn-warning">Cập nhật</button>
                             </div>
 
                         </div>
