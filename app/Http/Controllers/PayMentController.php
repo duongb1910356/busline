@@ -219,16 +219,15 @@ class PayMentController extends Controller
 
     public function sendSMS($ve)
     {
-        // require_once __DIR__ . '/vendor/autoload.php';
         $sid    = "AC6d1223daf1529e4f573a8e8430fafc7e";
-        $token  = "0a8cc6b79efa5d5486d9993c280c309e";
+        $token  = "f7acfa28fb416c86900459cebae0503c";
         $client = new Client($sid, $token);
 
         $message = $client->messages->create(
             "+" . $ve->sodienthoai, // Text this number
             [
                 'from' => '+18146125059', // From a valid Twilio number
-                'body' => 'Busline Phương Trang thông báo! Mã vé : ' . $ve->id_ve . " đã được đặt thành công!"
+                'body' => 'Busline Phương Trang thông báo! Mã vé của quý khách: ' . $ve->id_ve . " đã được đặt thành công. Đây là mã định danh thao tác trên vé của quý khách."
             ]
         );
 

@@ -135,6 +135,13 @@ $(document).ready(function () {
                 timLichFillModal($('#modalsuave-suatuyen').val(), $('#modalsuave-suangay').val(), idlichtrinh_khach, vitri_khach);
                 // $('#modalsuave-lichxechay').val(2);
                 // alert($('#lichxechay').val());
+                if(data.ve.tinhtrang == 1){
+                    $('#submitxuatve').prop('disabled', true);
+                    $('#submitcapnhat').prop('disabled', true);
+                }else{
+                    $('#submitxuatve').prop('disabled', false);
+                    $('#submitcapnhat').prop('disabled', false);
+                }
                 $('#modalchuyenlich').attr("data-idve", data.ve.id_ve);
                 modal.modal("show");
 

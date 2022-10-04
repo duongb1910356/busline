@@ -99,75 +99,7 @@ class ChucNangKhachController extends Controller
     {
         $ve = Ve::where("id_ve", $idve)->first();
         if ($ve->tinhtrang != 0) {
-            require_once("../bootstrap/configvnpay.php");
-            $amount = $ve->getGiaVe() * 100;
-            
-            $chitiethoadon = ChiTietHoaDon::where("id_ve", $ve->id_ve)->first();
-            $hoadon = HoaDon::where("id_hoadon", $chitiethoadon->id_hoadon)->first();
-            $hoadon->giatri = $hoadon->giatri - $amount;
-            $hoadon->save();
-            // echo $hoadon->id_hoadon;
-            $ipaddr = $_SERVER['REMOTE_ADDR'];
-            $inputData = array(
-                "vnp_Version" => "2.1.0",
-                "vnp_TransactionType" => "03",
-                "vnp_Command" => "refund",
-                "vnp_CreateBy" => "DƯƠNG",
-                "vnp_TmnCode" => $vnp_TmnCode,
-                "vnp_TxnRef" => $hoadon->id_hoadon,
-                "vnp_Amount" => $amount,
-                "vnp_OrderInfo" => 'Noi dung thanh toan',
-                "vnp_TransDate" => $expire,
-                "vnp_CreateDate" => date('YmdHis'),
-                "vnp_IpAddr" => $ipaddr
-            );
-            ksort($inputData);
-            $query = "";
-            $i = 0;
-            $hashdata = "";
-            foreach ($inputData as $key => $value) {
-                if ($i == 1) {
-                    $hashdata .= '&' . urlencode($key) . "=" . urlencode($value);
-                } else {
-                    $hashdata .= urlencode($key) . "=" . urlencode($value);
-                    $i = 1;
-                }
-                $query .= urlencode($key) . "=" . urlencode($value) . '&';
-            }
-
-            $vnp_apiUrl = $vnp_apiUrl . "?" . $query;
-            if (isset($vnp_HashSecret)) {
-                $vnpSecureHash = hash_hmac('sha512', $hashdata, $vnp_HashSecret);
-                $vnp_apiUrl .= 'vnp_SecureHash=' . $vnpSecureHash;
-            }
-            $ch = curl_init();
-            // curl_setopt($ch, CURLOPT_URL, $vnp_apiUrl);
-            // curl_setopt($ch, CURLOPT_HEADER, 1);
-
-            curl_setopt($ch, CURLOPT_URL, $vnp_apiUrl);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_HEADER, 0);
-            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-
-
-            $data = curl_exec($ch);
-            parse_str($data, $inputData);
-            // var_dump($data);
-            // $data = json_decode($data);
-            // echo $result['vnp_ResponseCode'];
-
-            // $inputData = array();
-            // foreach ($_GET as $key => $value) {
-            //     if (substr($key, 0, 4) == "vnp_") {
-            //         $inputData[$key] = $value;
-            //         echo $key . "------------";
-            //     }
-            // }
-            // // // $weather = json_decode($data);
-            // // // var_dump($inputData);
-            // echo $inputData['vnp_ResponseCode'];
-            curl_close($ch);
-
+            $inputData = $ve->refundVe($ve->id_ve);
             // echo $inputData['vnp_TxnRef'];
             if($inputData['vnp_ResponseCode'] == "00"){
                 $ve->delete();
@@ -206,4 +138,116 @@ class ChucNangKhachController extends Controller
 
         
     }
+
+    // public function huyVe($idve)
+    // {
+    //     $ve = Ve::where("id_ve", $idve)->first();
+    //     if ($ve->tinhtrang != 0) {
+    //         require_once("../bootstrap/configvnpay.php");
+    //         $amount = $ve->getGiaVe() * 100;
+            
+    //         $chitiethoadon = ChiTietHoaDon::where("id_ve", $ve->id_ve)->first();
+    //         $hoadon = HoaDon::where("id_hoadon", $chitiethoadon->id_hoadon)->first();
+    //         $hoadon->giatri = $hoadon->giatri - $amount;
+    //         $hoadon->save();
+    //         // echo $hoadon->id_hoadon;
+    //         $ipaddr = $_SERVER['REMOTE_ADDR'];
+    //         $inputData = array(
+    //             "vnp_Version" => "2.1.0",
+    //             "vnp_TransactionType" => "03",
+    //             "vnp_Command" => "refund",
+    //             "vnp_CreateBy" => "DƯƠNG",
+    //             "vnp_TmnCode" => $vnp_TmnCode,
+    //             "vnp_TxnRef" => $hoadon->id_hoadon,
+    //             "vnp_Amount" => $amount,
+    //             "vnp_OrderInfo" => 'Noi dung thanh toan',
+    //             "vnp_TransDate" => $expire,
+    //             "vnp_CreateDate" => date('YmdHis'),
+    //             "vnp_IpAddr" => $ipaddr
+    //         );
+    //         ksort($inputData);
+    //         $query = "";
+    //         $i = 0;
+    //         $hashdata = "";
+    //         foreach ($inputData as $key => $value) {
+    //             if ($i == 1) {
+    //                 $hashdata .= '&' . urlencode($key) . "=" . urlencode($value);
+    //             } else {
+    //                 $hashdata .= urlencode($key) . "=" . urlencode($value);
+    //                 $i = 1;
+    //             }
+    //             $query .= urlencode($key) . "=" . urlencode($value) . '&';
+    //         }
+
+    //         $vnp_apiUrl = $vnp_apiUrl . "?" . $query;
+    //         if (isset($vnp_HashSecret)) {
+    //             $vnpSecureHash = hash_hmac('sha512', $hashdata, $vnp_HashSecret);
+    //             $vnp_apiUrl .= 'vnp_SecureHash=' . $vnpSecureHash;
+    //         }
+    //         $ch = curl_init();
+    //         // curl_setopt($ch, CURLOPT_URL, $vnp_apiUrl);
+    //         // curl_setopt($ch, CURLOPT_HEADER, 1);
+
+    //         curl_setopt($ch, CURLOPT_URL, $vnp_apiUrl);
+    //         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    //         curl_setopt($ch, CURLOPT_HEADER, 0);
+    //         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+
+
+    //         $data = curl_exec($ch);
+    //         parse_str($data, $inputData);
+    //         // var_dump($data);
+    //         // $data = json_decode($data);
+    //         // echo $result['vnp_ResponseCode'];
+
+    //         // $inputData = array();
+    //         // foreach ($_GET as $key => $value) {
+    //         //     if (substr($key, 0, 4) == "vnp_") {
+    //         //         $inputData[$key] = $value;
+    //         //         echo $key . "------------";
+    //         //     }
+    //         // }
+    //         // // // $weather = json_decode($data);
+    //         // // // var_dump($inputData);
+    //         // echo $inputData['vnp_ResponseCode'];
+    //         curl_close($ch);
+
+    //         // echo $inputData['vnp_TxnRef'];
+    //         if($inputData['vnp_ResponseCode'] == "00"){
+    //             $ve->delete();
+    //             return view('trangchu.congratulations', [
+    //                 "status" => "VÉ ĐÃ ĐƯỢC HỦY THÀNH CÔNG",
+    //                 "comment" => "Số tiền hủy sẽ được hoàn trả lại cho quý khách",
+    //                 // "date" => $ve->lichtrinhs->ngaydi,
+    //                 // "time" => $ve->lichtrinhs->giodi,
+    //                 // "seat" => $ve->vitri,
+    //                 // "route" => $ve->lichtrinhs->tuyens->name_tuyen,
+    //                 "recomment" => "Vé khách vui lòng kiểm tra lại số tiền hoàn trả!"
+    //             ]);
+    //         }else{
+    //             return view('trangchu.congratulations', [
+    //                 "status" => "VÉ CHƯA ĐƯỢC HỦY",
+    //                 "comment" => "Lỗi ngân hàng thanh toán",
+    //                 // "date" => $ve->lichtrinhs->ngaydi,
+    //                 // "time" => $ve->lichtrinhs->giodi,
+    //                 // "seat" => $ve->vitri,
+    //                 // "route" => $ve->lichtrinhs->tuyens->name_tuyen,
+    //                 "recomment" => "Qúy khách vui lòng đến trực tiếp phòng vé để được hỗ trợ"
+    //             ]);
+    //         }
+    //     }else{
+    //         $ve->delete();
+    //         return view('trangchu.congratulations', [
+    //             "status" => "VÉ ĐÃ ĐƯỢC HỦY THÀNH CÔNG",
+    //             "comment" => "Cảm ơn quý khách đã sử dụng dịch vụ của chúng tôi",
+    //             // "date" => $ve->lichtrinhs->ngaydi,
+    //             // "time" => $ve->lichtrinhs->giodi,
+    //             // "seat" => $ve->vitri,
+    //             // "route" => $ve->lichtrinhs->tuyens->name_tuyen,
+    //             "recomment" => "Qúy khách có thể gọi tới tổng đài để được hỗ trợ"
+    //         ]);
+    //     }
+
+        
+    // }
 }
