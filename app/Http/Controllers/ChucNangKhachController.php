@@ -100,6 +100,7 @@ class ChucNangKhachController extends Controller
         $ve = Ve::where("id_ve", $idve)->first();
         if ($ve->tinhtrang != 0) {
             $inputData = $ve->refundVe($ve->id_ve);
+            // echo json_encode($inputData);
             // echo $inputData['vnp_TxnRef'];
             if($inputData['vnp_ResponseCode'] == "00"){
                 $ve->delete();

@@ -26,7 +26,7 @@ class Ve extends Model
     {
         $ve = Ve::where("id_ve", $idve)->first();
         require_once("../bootstrap/configvnpay.php");
-        $amount = $ve->getGiaVe() * 100;
+        $amount = $ve->getGiaVe();
 
         $chitiethoadon = ChiTietHoaDon::where("id_ve", $ve->id_ve)->first();
         $hoadon = HoaDon::where("id_hoadon", $chitiethoadon->id_hoadon)->first();
@@ -81,5 +81,6 @@ class Ve extends Model
         curl_close($ch);
         
         return $inputData;
+        // return $amount;
     }
 }
