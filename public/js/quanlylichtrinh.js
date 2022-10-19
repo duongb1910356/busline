@@ -10,6 +10,13 @@ $(document).ready(function () {
     $('#modalngaydi').val(today);
     $('#ngaydi').val(today);
 
+    $(".example").each(function () {
+        $(this).fancyTable({
+            inputStyle: "",
+            inputPlaceholder: "Search..."
+        })
+    });
+
     $('button[name="btnxoalichtrinh"]').click(function (e) { 
         e.stopImmediatePropagation();
         idlichtrinh = $(this).closest("tr").attr("id");
@@ -47,9 +54,9 @@ $(document).ready(function () {
 
     $('button[name="btnthemmoilichtrinh"]').click(function (e) { 
         e.preventDefault();
+        idlichtrinh = -1;
         $('#modalthemlichtrinh').modal("show");
-        $('#modaltuyen').trigger("change");
-        
+        $('#formsualichtrinh').trigger("reset");
     });
 
     $('#modaltuyen').change(function (e) { 
@@ -80,7 +87,58 @@ $(document).ready(function () {
                 var errors = data.responseJSON;
                 console.log(errors);
             }
-        });
-        
+        });     
     });
+
+    $('button[name="btnsualichtrinh"]').click(function(){
+        idlichtrinh = $(this).attr("data-idlichtrinh");
+        $.ajax({
+            type: "GET",
+            url: "/lichtrinh/laythongtin/" + idlichtrinh,
+            success: function (data) {
+                console.log(data);
+                $('#modaltuyen').val(data.id_tuyen);
+                $('#modalngaydi').val(data.ngaydi);
+                $('#giodi').val(data.giodi);
+                $('#modalbendi').val(data.id_bendi);
+                $('#modalbenden').val(data.id_benden);
+                $('#xe').val(data.id_xe);
+                $('#taixe').val(data.id_taixe);
+            },
+            error: function (data) {
+                alert("Lỗi hệ thống khi lấy thông tin lịch trình!");
+                var errors = data.responseJSON;
+                console.log(errors);
+            }
+        });
+        $('#modaltuyen').val(idlichtrinh);
+        $('#modalbendi').val()
+        $('#modalthemlichtrinh').modal("show");
+    })
+
+    $('#submitcapnhatlichtrinh').click(function(e){
+        e.preventDefault();
+        var myform = $('#formsualichtrinh').serialize();
+        $.ajax({
+            type: "GET",
+            url: "/lichtrinh/capnhat",
+            data: {
+                "dataform" : myform,
+                "idlichtrinh" : idlichtrinh
+            },
+            success: function (data) {
+                if(data == true){
+                    alert("Cập nhật thành công");
+                    $('#modalthemlichtrinh').modal("hide");
+                }else{
+                    alert("Cập nhật thất bại")
+                }
+            },
+            error: function (data) {
+                alert("Lỗi hệ thống!");
+                var errors = data.responseJSON;
+                console.log(errors);
+            }
+        });
+    })
 });

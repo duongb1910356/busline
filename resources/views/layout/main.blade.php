@@ -38,21 +38,16 @@
                             <li><a class="dropdown-item" href="/ve/banve">Bán vé</a></li>
                         </ul>
                     </li>
-                    <li class="nav-item dropdown px-3">
-                        <a class="nav-link dropdown-toggle text-white" href="#" id="dropdown04"
-                            data-bs-toggle="dropdown" aria-expanded="false">Lịch trình</a>
+                    <a class="nav-link px-3 text-white" href="/lichtrinh/quanly" >Lịch trình</a>
+                    {{-- <li class="nav-item dropdown px-3">
+                        
                         <ul class="dropdown-menu" aria-labelledby="dropdown04">
                             <li><a class="dropdown-item" href="/lichtrinh/quanly">Xem danh sách lịch trình</a></li>
                             <li><a class="dropdown-item" href="lichtrinh/themlichtrinh">Thêm mới lịch trình</a></li>
                         </ul>
-                    </li>
-                    <li class="nav-item dropdown px-3">
-                        <a class="nav-link dropdown-toggle text-white" href="#" id="dropdown04"
-                            data-bs-toggle="dropdown" aria-expanded="false">Tuyến</a>
-                        <ul class="dropdown-menu" aria-labelledby="dropdown04">
-                            <li><a class="dropdown-item" href="/tuyen/quanly">Xem danh sách tuyến</a></li>
-                        </ul>
-                    </li>
+                    </li> --}}
+                    <a class="nav-link px-3 text-white" href="/tuyen/quanly" >Tuyến</a>
+                    
                     <li class="nav-item dropdown px-3">
                         <a class="nav-link dropdown-toggle text-white" href="#" id="id-nhanvien"
                             data-id-nhanvien="@yield('id-nhanvien')" data-bs-toggle="dropdown"

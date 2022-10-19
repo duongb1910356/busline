@@ -72,6 +72,9 @@ Route::get('/thanhtoanvedon/{idve}', 'App\Http\Controllers\VeController@thanhToa
 
 Route::get('/lichtrinh/quanly', 'App\Http\Controllers\LichTrinhController@showLichTrinh');
 Route::get('/lichtrinh/xoa', 'App\Http\Controllers\LichTrinhController@xoaLichTrinh');
+Route::get('/lichtrinh/laythongtin/{idlichtrinh}', 'App\Http\Controllers\LichTrinhController@getInfoLichTrinh');
+Route::get('/lichtrinh/capnhat', 'App\Http\Controllers\LichTrinhController@capNhatLichTrinh');
+
 
 Route::get('/lichtrinh/benxetheotuyen', 'App\Http\Controllers\LichTrinhController@getBenXeTheoTuyen');
 

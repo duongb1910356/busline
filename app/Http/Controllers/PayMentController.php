@@ -204,7 +204,7 @@ class PayMentController extends Controller
             if (!Ve::where('id_lichtrinh', $newve->id_lichtrinh)->where('vitri', $newve->vitri)->exists()) {
                 $newve->save();
                 $check = true;
-                // $this->sendSMS($newve);
+                $this->sendSMS($newve);
                 array_push($idves, $newve->id_ve);
                 // return $newve->id_ve;
             } else {
@@ -220,7 +220,7 @@ class PayMentController extends Controller
     public function sendSMS($ve)
     {
         $sid    = "AC6d1223daf1529e4f573a8e8430fafc7e";
-        $token  = "f7acfa28fb416c86900459cebae0503c";
+        $token  = "331839b46348b162170b9f0764c8e78c";
         $client = new Client($sid, $token);
 
         $message = $client->messages->create(

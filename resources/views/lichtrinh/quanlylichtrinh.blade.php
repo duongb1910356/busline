@@ -35,7 +35,7 @@
 @section('maincontent')
     <div class="row mx-0 my-1 px-4">
         <div class="d-flex flex-column mb-2">
-            <button name="btnthemmoilichtrinh" class="btn btn-outline-info align-self-end">Thêm mới lịch trình</button>
+            <button name="btnthemmoilichtrinh" class="btn btn-outline-info align-self-end"><i class="bi bi-plus-circle"></i>&nbsp; Thêm mới lịch trình</button>
 
         </div>
         <div class="container">
@@ -45,17 +45,18 @@
                     <span>DANH SÁCH LỊCH TRÌNH</span>
                 </div>
                 <table id="" class="table example text-center" style="width: 100%">
-                    <tr>
-                        <th>Xe</th>
-                        <th>Tuyến</th>
-                        <th>Ngày đi</th>
-                        <th>Giờ đi</th>
-                        <th>Tài xế</th>
-                        <th>Bến đi</th>
-                        <th>Bến đến</th>
-                        <th>Trạng thái</th>
-                        <th></th>
-                    </tr>
+                    <thead>
+                        <tr>
+                            <th>Xe</th>
+                            <th>Tuyến</th>
+                            <th>Ngày đi</th>
+                            <th>Giờ đi</th>
+                            <th>Tài xế</th>
+                            <th>Bến đi</th>
+                            <th>Bến đến</th>
+                            <th>Trạng thái</th>
+                            <th></th>
+                        </tr>
                     </thead>
                     <tbody>
                         @foreach ($datas as $data)
@@ -77,9 +78,10 @@
                                     </td>
                                     <td>
                                         <button name="btnsualichtrinh" class="btn btn-info"
-                                            style="padding: .2rem .4rem; font-size: 15px;">Sửa</button>
-                                        <button name="btnxoalichtrinh" class="btn btn-warning"
-                                            style="padding: .2rem .4rem; font-size: 15px;">Xóa</button>
+                                            data-idlichtrinh="{{ $item->lichtrinh->id_lichtrinh }}" data-bs-placement="top" title = "Sửa lịch trình"
+                                            style="padding: .2rem .4rem; font-size: 15px;"><i class="bi bi-gear"></i></button>
+                                        <button name="btnxoalichtrinh" class="btn btn-warning" data-bs-placement="top" title = "Xóa lịch trình"
+                                            style="padding: .2rem .4rem; font-size: 15px;"><i class="bi bi-trash"></i></button>
                                     </td>
 
                                 </tr>
@@ -119,7 +121,7 @@
                                     aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <form class="row" id="formsuave">
+                                <form class="row" id="formsualichtrinh">
                                     <div class="col-md-12">
                                         <label class="form-label">Tuyến</label>
                                         <select name="modaltuyen" id="modaltuyen" class="form-select">
@@ -131,14 +133,20 @@
                                     <div class="col-md-6">
                                         <label class="form-label">Bến xe đi</label>
                                         <select name="modalbendi" id="modalbendi" class="form-select">
+                                            @foreach ($benxes as $benxe)
+                                                <option value="{{ $benxe->id_benxe }}">{{ $benxe->name_benxe }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label">Bến xe đến</label>
                                         <select name="modalbenden" id="modalbenden" class="form-select">
+                                            @foreach ($benxes as $benxe)
+                                                <option value="{{ $benxe->id_benxe }}">{{ $benxe->name_benxe }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
-                                    
+
                                     <div class="col-md-6">
                                         <label class="form-label">Ngày đi</label>
                                         <input type="date" name="modalngaydi" id="modalngaydi" class="form-control">
@@ -157,14 +165,18 @@
                                     <div class="col-md-6">
                                         <label class="form-label">Tài xế</label>
                                         <select name="taixe" id="taixe" class="form-select">
-                                            {{-- <option value="-1">None</option> --}}
+                                            @foreach ($taixes as $taixe)
+                                                <option value="{{ $taixe->id_taixe }}">{{ $taixe->name_taixe }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
 
                                     <div class="col-md-6">
                                         <label class="form-label">Xe</label>
-                                        <select name="taixe" id="taixe" class="form-select">
-                                            {{-- <option value="-1">None</option> --}}
+                                        <select name="xe" id="xe" class="form-select">
+                                            @foreach ($xes as $xe)
+                                                <option value="{{ $xe->id_xe }}">{{ $xe->name_xe }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </form>
@@ -172,7 +184,8 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                                <button id="submitthemlichtrinh" type="button" class="btn btn-warning">Thêm lịch</button>
+                                <button id="submitcapnhatlichtrinh" type="button" class="btn btn-warning">Xác
+                                    nhận</button>
                             </div>
 
                         </div>
