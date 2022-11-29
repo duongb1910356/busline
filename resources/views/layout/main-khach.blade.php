@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="_token" content="{{ csrf_token() }}" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BusLine - Đặt vé online</title>
+    <title>DuongDrive - Đặt vé online</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
@@ -21,7 +21,7 @@
     <nav class="navbar navbar-expand-md navbar-dark px-3" style="background-color: rgba(25, 17, 106, 0.68);"
         aria-label="Fourth navbar example">
         <div class="container-fluid">
-            <a class="navbar-brand" href="/"><img src=" {{asset('img/icon/Directions bus.svg')}} " alt="">BUSLINE</a>
+            <a class="navbar-brand" href="/"><img src=" {{asset('img/icon/Directions bus.svg')}} " alt="">DuongDrive</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample04"
                 aria-controls="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -74,12 +74,12 @@
                         <h5 class="text-uppercase mb-4">Về công ty</h5>
 
                         <p>
-                            Công ty Phương Trang được thành lập năm 2001. Trải qua 20 năm phát triển luôn cải tiến
+                            Công ty DuongDrive được thành lập năm 2001. Trải qua 20 năm phát triển luôn cải tiến
                             mang đến chất lượng dịch vụ tối ưu nhất dành cho khách hàng.
                         </p>
 
                         <p>
-                            Với Phương Trang "Chất lượng là danh dự".
+                            Với DuongDrive "Khách hàng là miếng cơm manh áo, chửi khách là đá bát cơm".
                         </p>
 
                         <div class="mt-4">
@@ -110,7 +110,7 @@
                             </li>
                             <li class="mb-3">
                                 <span class="fa-li"><i class="bi bi-envelope-fill"></i></span><span
-                                    class="ms-2">phuongtrang@gmail.com</span>
+                                    class="ms-2">duongb1910356@gmail.com</span>
                             </li>
                             <li class="mb-3">
                                 <span class="fa-li"><i class="bi bi-telephone-fill"></i></span><span class="ms-2">

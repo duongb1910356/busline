@@ -14,7 +14,7 @@
             @foreach ($carousel as $car)
                 <a href="/tintuc/{{ $car->id_tintuc }}">
                     <div class="carousel-item active">
-                        <img src="<?= 'data:image/jpg;charset=utf8;base64,' . base64_encode($car->hinhanh) ?>"
+                        <img style="height: 350px" src="<?= 'data:image/jpg;charset=utf8;base64,' . base64_encode($car->hinhanh) ?>"
                             class="d-block w-100" alt="{{ $car->tieude }}">
                     </div>
                 </a>

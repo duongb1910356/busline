@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BusLine - Đặt vé online</title>
+    <title>DuongDrive - Đặt vé online</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
@@ -16,7 +16,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-2 sidebar ps-1">
-                <div class="sidebar-brand"><img src="img/icon/Directions bus.svg" alt=""> BUSLINE</div>
+                <div class="sidebar-brand"><img src="img/icon/Directions bus.svg" alt=""> DuongDrive</div>
                 <div class="d-flex flex-column align-items-center">
                     <img src="@yield('useravatar')" class="sidebar-img" alt="">
                     <span>@yield('username', 'Username')<a href="/logout"><img src="img/icon/Logout.svg" alt=""></a></span>
